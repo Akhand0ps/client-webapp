@@ -1,13 +1,99 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ==============================
+   macOS Sonoma Desktop — Global
+   ============================== */
+
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
+  padding: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  cursor: default;
+  overflow: hidden;
+  user-select: none;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+/* Animated wallpaper gradient */
+.sonoma-wallpaper {
+  background: linear-gradient(
+    135deg,
+    #e8d5b0 0%,
+    #a8c5e8 20%,
+    #4a90d9 40%,
+    #1a5fa8 60%,
+    #0d3d6b 80%,
+    #e8d5b0 100%
+  );
+  background-size: 400% 400%;
+  animation: gradient-shift 20s ease infinite;
+}
+
+@keyframes gradient-shift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* Dock tooltip */
+.dock-tooltip {
+  position: absolute;
+  bottom: calc(100% + 10px);
+  left: 50%;
+  transform: translateX(-50%) scale(0);
+  background: rgba(0, 0, 0, 0.7);
+  color: white;
+  font-size: 11px;
+  padding: 3px 10px;
+  border-radius: 4px;
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  transition: all 150ms ease-out;
+  backdrop-filter: blur(10px);
+}
+
+.dock-icon-wrapper:hover .dock-tooltip {
+  transform: translateX(-50%) scale(1);
+  opacity: 1;
+}
+
+/* Window drag */
+.window-titlebar {
+  cursor: grab;
+}
+.window-titlebar:active {
+  cursor: grabbing;
+}
+
+/* Traffic light buttons */
+.traffic-light {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  display: inline-block;
+  cursor: pointer;
+  transition: all 150ms ease;
+  position: relative;
+}
+.traffic-light:hover {
+  filter: brightness(0.85);
+}
+.traffic-light-close { background-color: #FF5F56; }
+.traffic-light-minimize { background-color: #FFBD2E; }
+.traffic-light-maximize { background-color: #27C93F; }
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(0,0,0,0.2);
+  border-radius: 3px;
 }
