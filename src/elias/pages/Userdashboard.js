@@ -1,4 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
+import {
+  CalendarCheck,
+  CircleDollarSign,
+  ClipboardCheck,
+  HelpCircle,
+  TreePalm,
+  Users,
+} from 'lucide-react';
 
 const API_BASE = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
 
@@ -82,19 +90,17 @@ const ROLES = [
 ];
 
 const USER_STATS = [
-  { label: 'Leave Balance', value: '12', unit: 'days',   icon: '🌴', color: T.green,  bg: T.greenL,  border: T.greenD  },
-  { label: 'Attendance',    value: '94', unit: '%',      icon: '📅', color: T.primary, bg: T.primaryL, border: T.orangeM },
-  { label: 'Pending Tasks', value: '3',  unit: 'tasks',  icon: '✅', color: T.orange, bg: T.orangeL, border: T.orangeM },
-  { label: 'Team Members',  value: '18', unit: 'people', icon: '👥', color: T.amber,  bg: T.amberL,  border: T.amberD  },
+  { label: 'Leave Balance', value: '12', unit: 'days',   Icon: TreePalm,       color: T.green,   bg: T.greenL,   border: T.greenD  },
+  { label: 'Attendance',    value: '94', unit: '%',      Icon: CalendarCheck,  color: T.primary, bg: T.primaryL, border: T.orangeM },
+  { label: 'Pending Tasks', value: '3',  unit: 'tasks',  Icon: ClipboardCheck, color: T.orange,  bg: T.orangeL,  border: T.orangeM },
+  { label: 'Team Members',  value: '18', unit: 'people', Icon: Users,          color: T.amber,   bg: T.amberL,   border: T.amberD  },
 ];
 
-const QUICK_LINKS = [
-  { icon: '🌴', label: 'Apply Leave',   color: T.green,   bg: T.greenL  },
-  { icon: '💰', label: 'View Payslip',  color: T.blue,    bg: T.blueL   },
-  { icon: '📅', label: 'My Attendance', color: T.orange,  bg: T.orangeL },
-  { icon: '🎯', label: 'My Goals',      color: T.amber,   bg: T.amberL  },
-  { icon: '📚', label: 'My Training',   color: T.primary, bg: T.primaryL },
-  { icon: '🔧', label: 'HR Helpdesk',   color: T.red,     bg: T.redL    },
+const SMART_ACTIONS = [
+  { Icon: TreePalm,         label: 'Apply Leave',      color: T.green,   bg: T.greenL },
+  { Icon: CircleDollarSign, label: 'View Payslip',     color: T.blue,    bg: T.blueL },
+  { Icon: CalendarCheck,    label: 'Check Attendance', color: T.primary, bg: T.primaryL },
+  { Icon: HelpCircle,       label: 'Open Helpdesk',    color: T.red,     bg: T.redL },
 ];
 
 /* ══════════════════════════════════════════════════════════════════
@@ -648,10 +654,13 @@ function CitationDrilldown({ answerKey, query }) {
 
 function StatCard({ s }) {
   const [hov, setHov] = useState(false);
+  const Icon = s.Icon;
   return (
     <div onMouseEnter={() => setHov(true)} onMouseLeave={() => setHov(false)}
       style={{ flex: 1, minWidth: 0, padding: '20px', borderRadius: 12, background: T.card, border: `1px solid ${hov ? T.primary : T.border}`, boxShadow: hov ? T.shadowHover : T.shadow, transition: 'transform .2s ease, box-shadow .2s ease, border-color .2s ease', transform: hov ? 'translateY(-3px)' : 'none', cursor: 'default' }}>
-      <div style={{ width: 40, height: 40, borderRadius: 12, background: s.bg, border: `1px solid ${s.border}`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 20, marginBottom: 16 }}>{s.icon}</div>
+      <div style={{ width: 40, height: 40, borderRadius: 12, background: s.bg, border: `1px solid ${s.border}`, display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 16 }}>
+        <Icon size={20} strokeWidth={2.4} color={s.color} />
+      </div>
       <div style={{ fontSize: 28, fontWeight: 700, color: s.color, lineHeight: 1 }}>
         {s.value}<span style={{ fontSize: 13, fontWeight: 600, color: T.muted, marginLeft: 6 }}>{s.unit}</span>
       </div>
@@ -957,7 +966,7 @@ export default function UserDashboard({ onClose, userName = CURRENT_USER.name })
         @keyframes fadeIn  { from{opacity:0} to{opacity:1} }
         @keyframes pulse   { 0%,100%{opacity:1} 50%{opacity:.3} }
         .ud-chip:hover  { background:${T.primaryL}!important; border-color:${T.primary}!important; color:${T.primary}!important; transform:translateY(-1px); }
-        .ud-ql:hover    { transform:translateY(-3px); border-color:${T.primary}!important; box-shadow:${T.shadowHover}!important; }
+        .ud-action:hover { transform:translateY(-2px) scale(1.02); border-color:${T.primary}!important; box-shadow:${T.shadowHover}!important; }
         .ud-close:hover { background:${T.redL}!important; color:${T.red}!important; border-color:${T.redD}!important; }
         .ud-scroll::-webkit-scrollbar { width:4px }
         .ud-scroll::-webkit-scrollbar-track { background:transparent }
@@ -1020,19 +1029,28 @@ export default function UserDashboard({ onClose, userName = CURRENT_USER.name })
                   {USER_STATS.map(s => <StatCard key={s.label} s={s} />)}
                 </div>
 
-                <div style={{ marginBottom: 32 }}>
-                  <div style={{ fontSize: 12, fontWeight: 800, letterSpacing: 1.2, textTransform: 'uppercase', color: T.muted, marginBottom: 16 }}>Quick Links</div>
-                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 12 }}>
-                    {QUICK_LINKS.map(q => (
-                      <div key={q.label} className="ud-ql"
-                        style={{ display: 'flex', alignItems: 'center', gap: 12, minHeight: 72, padding: '14px 16px', background: T.card, border: `1px solid ${T.border}`, borderRadius: 12, cursor: 'pointer', transition: 'all .2s ease', boxShadow: '0 4px 14px rgba(15,23,42,.05)' }}
-                        onMouseEnter={e => { e.currentTarget.style.borderColor = T.primary; e.currentTarget.style.background = T.card; }}
-                        onMouseLeave={e => { e.currentTarget.style.borderColor = T.border; e.currentTarget.style.background = T.card; }}
+                <div style={{ marginBottom: 24 }}>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 }}>
+                    <div style={{ fontSize: 18, fontWeight: 600, color: T.text }}>Recommended Actions</div>
+                    <div style={{ fontSize: 12, color: T.muted, fontWeight: 500 }}>Smart Actions</div>
+                  </div>
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4,minmax(0,1fr))', gap: 12 }}>
+                    {SMART_ACTIONS.map(action => {
+                      const Icon = action.Icon;
+                      return (
+                      <button key={action.label} className="ud-action"
+                        style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10, minHeight: 48, padding: '10px 14px', background: T.card, border: `1px solid ${T.border}`, borderRadius: 12, cursor: 'pointer', transition: 'all .2s ease', boxShadow: '0 3px 10px rgba(15,23,42,.04)', color: T.text, fontFamily: "'Poppins',sans-serif" }}
+                        type="button"
+                        onMouseEnter={e => { e.currentTarget.style.borderColor = T.primary; }}
+                        onMouseLeave={e => { e.currentTarget.style.borderColor = T.border; }}
                       >
-                        <div style={{ width: 42, height: 42, borderRadius: 12, background: q.bg, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 18, flexShrink: 0 }}>{q.icon}</div>
-                        <span style={{ fontSize: 14, fontWeight: 600, color: T.text }}>{q.label}</span>
-                      </div>
-                    ))}
+                        <span style={{ width: 28, height: 28, borderRadius: 10, background: action.bg, color: action.color, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                          <Icon size={16} strokeWidth={2.4} color={action.color} />
+                        </span>
+                        <span style={{ fontSize: 13, fontWeight: 600, whiteSpace: 'nowrap' }}>{action.label}</span>
+                      </button>
+                      );
+                    })}
                   </div>
                 </div>
 
